@@ -24,7 +24,7 @@ def add_user(user: User):
     return user
 
 @app.put("/api/users/{user_id}", status_code=status.HTTP_200_OK)
-def get_user(user_id: int, user: User):
+def update_user(user_id: int, user: User):
     for index in range(len(users)):
         if users[index].user_id == user_id:
             users[index] = user
