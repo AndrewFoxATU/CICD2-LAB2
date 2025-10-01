@@ -23,10 +23,35 @@ def test_bad_student_id_422(client, bad_sid):
 def test_get_user_404(client):
     r = client.get("/api/users/999")
     assert r.status_code == 404
-    
+
 def test_delete_then_404(client):
     client.post("/api/users", json=user_payload(uid=10))
     r1 = client.delete("/api/users/10")
     assert r1.status_code == 204
     r2 = client.delete("/api/users/10")
     assert r2.status_code == 404
+
+def test_update_user_ok(client):
+    # Create a user first
+    client.post("/api/users", json=user_payload(uid=20, name="Andrew"))
+    # Update the user
+    r = client.put("/api/users/20", json=user_payload(uid=20, name="Andrew Updated"))
+    assert r.status_code == 200
+    data = r.json()
+    assert data["name"] == "Andrew Updated"
+
+
+def test_update_user_404(client):
+    r = client.put("/api/users/9999", json=user_payload(uid=9999, name="Joe"))
+    assert r.status_code == 404
+
+
+@pytest.mark.parametrize("bad_email", [
+    "fakeemail",
+    "gmail.com",
+    "user@.gmail",
+    "user@gmail..com"
+])
+def test_bad_email_422(client, bad_email):
+    r = client.post("/api/users", json=user_payload(uid=50, email=bad_email))
+    assert r.status_code == 422
