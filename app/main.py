@@ -33,7 +33,7 @@ def get_user(user_id: int, user: User):
 
 
 
-@app.delete("/api/users/delete/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/api/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(user_id: int):
     for u in users:
         if u.user_id == user_id:
